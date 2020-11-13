@@ -25,7 +25,7 @@ Open Application
     ...    *Output Arguments:* N/A
     Run Keyword Unless    '${DEVICE}' is 'None'    Create Safari Webdriver
     Run Keyword Unless    '${DEVICE}' is 'None'    Go to    ${HOST}
-    Run Keyword If    '${DEVICE}' is 'None'    Open Browser    ${HOST}    browser=${BROWSER}    remote_url=10.12.57.7:32445/wd/hub
+    Run Keyword If    '${DEVICE}' is 'None'    Open Browser    ${HOST}    browser=${BROWSER}    remote_url=10.244.1.143:4444
     Run Keyword If    '${DEVICE}' is 'None'    Maximize Browser Window
     Wait Locator    //h1[text()='Caixa Geral de Depósitos']    type=visible
     Run Keyword If    '${DEVICE}' is 'None' and ${VIDEO}    Start Recording    ffmpeg_exe_file_path=ffmpeg.exe
