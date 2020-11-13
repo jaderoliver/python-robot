@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-py-demo
+  labels:
+    app: project-py-demo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: project-py-demo
+      labels:
+        app: project-py-demo
+    spec:
+      containers:
+      - name: project-py-demo
+        image: python:3.8.6-slim
+        command: ["/bin/sh", "-c"]
+        args:
+          - pip install robotframework;
+          - pip install robotframework-seleniumlibrary;
+          - python -m robot .;
+        imagePullPolicy: "IfNotPresent"
+      nodeSelector:
+         kubernetes.io/os: linux
+  selector:
+    matchLabels:
+      app: project-py-demo
