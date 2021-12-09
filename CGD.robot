@@ -1,4 +1,4 @@
-*** Settings ***
+***** Settings *****
 Documentation     *Test Suite:* Navigate On CGD
 ...
 ...               *Objective:* Tests demonstartive of navigation on CGD application.
