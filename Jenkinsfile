@@ -14,6 +14,10 @@ pipeline {
          stage('Do the deployment') {
             steps {
                 echo ">> Run deploy applications "
+                ls -lhart
+                pwd
+                echo " "
+                echo BRANCH
             }
         }
     }
