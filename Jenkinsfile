@@ -15,8 +15,8 @@ pipeline {
             steps {
                 echo ">> Run deploy applications "
                 script{
-                    ls -lhart
-                    pwd
+                    sh 'ls -lhart'
+                    sh 'pwd'
                     echo " "
                     echo BRANCH
                 }
