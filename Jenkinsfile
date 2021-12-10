@@ -18,7 +18,7 @@ pipeline {
                     sh 'ls -lhart'
                     sh 'pwd'
                     echo " "
-                    echo BRANCH
+                    echo BRANCH_NAME
                 }
             }
         }
