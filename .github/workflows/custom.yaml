@@ -10,4 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Update Webex Channel
-        run: echo "Testing..."
+        run: |
+         echo "Testing..."
+         exit 1
