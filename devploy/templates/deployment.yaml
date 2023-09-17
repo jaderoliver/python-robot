@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hdconnect-proxy
+  namespace: ns-{{ .Values.namespace }}
+  labels:
+    app: hdconnect-proxy
+spec:
+  selector:
+    matchLabels:
+      app: hdconnect-proxy
+  replicas: 1
+# **** Important option to configure rolling updates is the update strategy ****
+#  strategy:
+#    type: RollingUpdate
+#    rollingUpdate:
+#      maxSurge: 2
+#      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: hdconnect-proxy
+    spec:
+    {{- if eq .Values.provider "azure" }}
+     {{- template "affinity.specs" }}
+                - {{ .Values.username }}
+    {{- end }}
+      containers:
+      - name: image-hdconnect-proxy
+        image: {{ .Values.imageRepo }}/{{ .Values.imageName }}:{{ .Values.imageTag }}
+        {{- if .Values.resourceLimit.status }}
+        resources:
+          requests:
+            memory: {{ .Values.resourceLimit.requests.memory }}
+            cpu: {{ .Values.resourceLimit.requests.cpu }}
+          limits:
+            memory: {{ .Values.resourceLimit.limits.memory }}
+            cpu: {{ .Values.resourceLimit.limits.cpu }}
+        {{- end }}
+        imagePullPolicy: Always
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        env:
+        {{- template "hdconnect-proxy.env" }}
+        {{- range .Values.EnvVars }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
+        ports:
+          - name: http
+            containerPort: 8080
+      imagePullSecrets:
+        - name: nexus-registry
+      {{- if eq .Values.provider "azure" }}
+      {{- template "taint.specs" . }}
+      {{- end }}
+
+#####################################################################################
+#####################################################################################
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hdconnect-proxyauth
+  namespace: ns-{{ .Values.namespace }}
+  labels:
+    app: hdconnect-proxyauth
+spec:
+  selector:
+    matchLabels:
+      app: hdconnect-proxyauth
+  replicas: 1
+# **** Important option to configure rolling updates is the update strategy ****
+#  strategy:
+#    type: RollingUpdate
+#    rollingUpdate:
+#      maxSurge: 2
+#      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: hdconnect-proxyauth
+    spec:
+    {{- if eq .Values.provider "azure" }}
+     {{- template "affinity.specs" }}
+                - {{ .Values.username }}
+    {{- end }}
+      containers:
+      - name: image-hdconnect-proxyauth
+        image: {{ .Values.imageRepo }}/{{ .Values.imageName }}:{{ .Values.imageTag }}
+        {{- if .Values.resourceLimit.status }}
+        resources:
+          requests:
+            memory: {{ .Values.resourceLimit.requests.memory }}
+            cpu: {{ .Values.resourceLimit.requests.cpu }}
+          limits:
+            memory: {{ .Values.resourceLimit.limits.memory }}
+            cpu: {{ .Values.resourceLimit.limits.cpu }}
+        {{- end }}
+        imagePullPolicy: Always
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        env:
+        {{- template "hdconnect-proxyauth.env" }}
+        {{- range .Values.EnvVars }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
+        ports:
+          - name: http
+            containerPort: 8080
+      imagePullSecrets:
+        - name: nexus-registry
+      {{- if eq .Values.provider "azure" }}
+      {{- template "taint.specs" . }}
+      {{- end }}
